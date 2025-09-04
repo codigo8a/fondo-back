@@ -4,10 +4,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Document(collection = "producto")
 @Schema(description = "Entidad que representa un producto de inversión")
@@ -18,30 +20,30 @@ public class Producto {
     private String id;
 
     @NotBlank(message = "El nombre del producto es obligatorio")
-    @Schema(description = "Nombre del producto", example = "Fondo de Inversión Agresivo", required = true)
+    @Schema(description = "Nombre del producto", example = "FPV_BTG_PACTUAL_ECOPETROL", required = true)
     private String nombre;
 
-    @NotBlank(message = "La descripción del producto es obligatoria")
-    @Schema(description = "Descripción del producto", example = "Fondo de inversión con alto riesgo y alta rentabilidad", required = true)
-    private String descripcion;
+    @NotBlank(message = "El tipo de producto es obligatorio")
+    @Schema(description = "Tipo de producto", example = "FPV", required = true)
+    private String tipoProducto;
 
     @NotNull(message = "El monto mínimo es obligatorio")
     @DecimalMin(value = "0.0", inclusive = false, message = "El monto mínimo debe ser mayor que 0")
-    @Schema(description = "Monto mínimo de inversión", example = "50000", required = true)
+    @Schema(description = "Monto mínimo de inversión", example = "125000", required = true)
     private BigDecimal montoMinimo;
 
-    @NotBlank(message = "La categoría del producto es obligatoria")
-    @Schema(description = "Categoría del producto", example = "FPV", required = true)
-    private String categoria;
+    @NotEmpty(message = "El producto debe estar disponible en al menos una sucursal")
+    @Schema(description = "Lista de IDs de sucursales donde está disponible el producto", example = "[\"64f0a1c2e4b0f1a2d3c4e5f7\", \"64f0a1c2e4b0f1a2d3c4e5f8\"]", required = true)
+    private List<String> disponibleEn;
 
     // Constructores
     public Producto() {}
 
-    public Producto(String nombre, String descripcion, BigDecimal montoMinimo, String categoria) {
+    public Producto(String nombre, String tipoProducto, BigDecimal montoMinimo, List<String> disponibleEn) {
         this.nombre = nombre;
-        this.descripcion = descripcion;
+        this.tipoProducto = tipoProducto;
         this.montoMinimo = montoMinimo;
-        this.categoria = categoria;
+        this.disponibleEn = disponibleEn;
     }
 
     // Getters y Setters
@@ -61,12 +63,12 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public String getDescripcion() {
-        return descripcion;
+    public String getTipoProducto() {
+        return tipoProducto;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setTipoProducto(String tipoProducto) {
+        this.tipoProducto = tipoProducto;
     }
 
     public BigDecimal getMontoMinimo() {
@@ -77,12 +79,12 @@ public class Producto {
         this.montoMinimo = montoMinimo;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public List<String> getDisponibleEn() {
+        return disponibleEn;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setDisponibleEn(List<String> disponibleEn) {
+        this.disponibleEn = disponibleEn;
     }
 
     @Override
@@ -90,9 +92,9 @@ public class Producto {
         return "Producto{" +
                 "id='" + id + '\'' +
                 ", nombre='" + nombre + '\'' +
-                ", descripcion='" + descripcion + '\'' +
+                ", tipoProducto='" + tipoProducto + '\'' +
                 ", montoMinimo=" + montoMinimo +
-                ", categoria='" + categoria + '\'' +
+                ", disponibleEn=" + disponibleEn +
                 '}';
     }
 }

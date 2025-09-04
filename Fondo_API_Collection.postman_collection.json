@@ -674,6 +674,272 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Producto CRUD",
+			"item": [
+				{
+					"name": "Obtener todos los productos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener producto por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/64f0a1c2e4b0f1a2d3c4e5f9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"64f0a1c2e4b0f1a2d3c4e5f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear nuevo producto",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Fondo de Pensión Obligatoria\",\n  \"tipoProducto\": \"PENSION\",\n  \"montoMinimo\": 100000.0,\n  \"disponibleEn\": [\"64f0a1c2e4b0f1a2d3c4e5f7\", \"64f0a1c2e4b0f1a2d3c4e5f8\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/productos",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar producto",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nombre\": \"Fondo de Pensión Obligatoria Actualizado\",\n  \"tipoProducto\": \"PENSION\",\n  \"montoMinimo\": 150000.0,\n  \"disponibleEn\": [\"64f0a1c2e4b0f1a2d3c4e5f7\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/productos/64f0a1c2e4b0f1a2d3c4e5f9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"64f0a1c2e4b0f1a2d3c4e5f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar producto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/64f0a1c2e4b0f1a2d3c4e5f9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"64f0a1c2e4b0f1a2d3c4e5f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar productos por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/buscar/nombre?nombre=Fondo",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"buscar",
+								"nombre"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "Fondo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar productos por tipo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/buscar/tipo?tipoProducto=PENSION",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"buscar",
+								"tipo"
+							],
+							"query": [
+								{
+									"key": "tipoProducto",
+									"value": "PENSION"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar productos por monto máximo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/buscar/monto-maximo?montoMaximo=200000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"buscar",
+								"monto-maximo"
+							],
+							"query": [
+								{
+									"key": "montoMaximo",
+									"value": "200000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar productos por sucursal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/buscar/sucursal?sucursalId=64f0a1c2e4b0f1a2d3c4e5f7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"buscar",
+								"sucursal"
+							],
+							"query": [
+								{
+									"key": "sucursalId",
+									"value": "64f0a1c2e4b0f1a2d3c4e5f7"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar si existe producto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/existe/64f0a1c2e4b0f1a2d3c4e5f9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"existe",
+								"64f0a1c2e4b0f1a2d3c4e5f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar si existe producto por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/productos/existe/nombre?nombre=Fondo de Pensión",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"productos",
+								"existe",
+								"nombre"
+							],
+							"query": [
+								{
+									"key": "nombre",
+									"value": "Fondo de Pensión"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [
