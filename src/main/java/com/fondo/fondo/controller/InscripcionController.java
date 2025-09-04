@@ -3,6 +3,7 @@ package com.fondo.fondo.controller;
 import com.fondo.fondo.entity.Inscripcion;
 import com.fondo.fondo.dto.InscripcionCreateDto;
 import com.fondo.fondo.service.InscripcionService;
+import com.fondo.fondo.dto.InscripcionDetalleDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -112,14 +113,15 @@ public class InscripcionController {
 
     @GetMapping("/cliente/{idCliente}")
     @Operation(summary = "Buscar inscripciones por cliente", 
-               description = "Obtiene todas las inscripciones de un cliente específico")
+               description = "Obtiene todas las inscripciones de un cliente específico con información completa del producto y sucursal")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Inscripciones encontradas exitosamente o lista vacía si no hay inscripciones")
+            @ApiResponse(responseCode = "200", description = "Inscripciones encontradas exitosamente o lista vacía si no hay inscripciones",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = InscripcionDetalleDto.class)))
     })
-    public ResponseEntity<List<Inscripcion>> buscarInscripcionesPorCliente(
+    public ResponseEntity<List<InscripcionDetalleDto>> buscarInscripcionesPorCliente(
             @Parameter(description = "ID del cliente", example = "64f0a1c2e4b0f1a2d3c4e5f9")
             @PathVariable String idCliente) {
-        List<Inscripcion> inscripciones = inscripcionService.buscarInscripcionesPorCliente(idCliente);
+        List<InscripcionDetalleDto> inscripciones = inscripcionService.buscarInscripcionesDetalladasPorCliente(idCliente);
         return ResponseEntity.ok(inscripciones);
     }
 

@@ -4,12 +4,16 @@ import com.fondo.fondo.entity.Inscripcion;
 import com.fondo.fondo.entity.Producto;
 import com.fondo.fondo.repository.InscripcionRepository;
 import com.fondo.fondo.repository.ProductoRepository;
+import com.fondo.fondo.dto.InscripcionDetalleDto;
+import com.fondo.fondo.entity.Sucursal;
+import com.fondo.fondo.repository.SucursalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Service
 public class InscripcionService {
@@ -19,6 +23,9 @@ public class InscripcionService {
     
     @Autowired
     private ProductoRepository productoRepository;
+    
+    @Autowired
+    private SucursalRepository sucursalRepository;
 
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         return inscripcionRepository.findAll();
@@ -66,6 +73,32 @@ public class InscripcionService {
 
     public List<Inscripcion> buscarInscripcionesPorCliente(String idCliente) {
         return inscripcionRepository.findByIdCliente(idCliente);
+    }
+
+    public List<InscripcionDetalleDto> buscarInscripcionesDetalladasPorCliente(String idCliente) {
+        List<Inscripcion> inscripciones = inscripcionRepository.findByIdCliente(idCliente);
+        List<InscripcionDetalleDto> inscripcionesDetalladas = new ArrayList<>();
+        
+        for (Inscripcion inscripcion : inscripciones) {
+            // Obtener producto
+            Optional<Producto> productoOpt = productoRepository.findById(inscripcion.getIdProducto());
+            // Obtener sucursal
+            Optional<Sucursal> sucursalOpt = sucursalRepository.findById(inscripcion.getIdSucursal());
+            
+            if (productoOpt.isPresent() && sucursalOpt.isPresent()) {
+                InscripcionDetalleDto detalle = new InscripcionDetalleDto(
+                    inscripcion.getId(),
+                    inscripcion.getIdCliente(),
+                    productoOpt.get(),
+                    sucursalOpt.get(),
+                    inscripcion.getMontoInvertido(),
+                    inscripcion.getFechaTransaccion()
+                );
+                inscripcionesDetalladas.add(detalle);
+            }
+        }
+        
+        return inscripcionesDetalladas;
     }
 
     public List<Inscripcion> buscarInscripcionesPorProducto(String idProducto) {
