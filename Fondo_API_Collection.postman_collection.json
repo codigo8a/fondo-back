@@ -222,6 +222,211 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Inscripcion CRUD",
+			"item": [
+				{
+					"name": "Obtener todas las inscripciones",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener inscripción por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/64f0a1c2e4b0f1a2d3c4e5f8",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"64f0a1c2e4b0f1a2d3c4e5f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear nueva inscripción",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idCliente\": \"64f0a1c2e4b0f1a2d3c4e5f9\",\n    \"idProducto\": \"64f0a1c2e4b0f1a2d3c4e5f6\",\n    \"montoInvertido\": 100000,\n    \"fechaTransaccion\": \"2025-01-15T10:30:00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar inscripción",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"idCliente\": \"64f0a1c2e4b0f1a2d3c4e5f9\",\n    \"idProducto\": \"64f0a1c2e4b0f1a2d3c4e5f6\",\n    \"montoInvertido\": 150000,\n    \"fechaTransaccion\": \"2025-01-15T14:45:00\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/64f0a1c2e4b0f1a2d3c4e5f8",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"64f0a1c2e4b0f1a2d3c4e5f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar inscripción",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/64f0a1c2e4b0f1a2d3c4e5f8",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"64f0a1c2e4b0f1a2d3c4e5f8"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar inscripciones por cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/cliente/64f0a1c2e4b0f1a2d3c4e5f9",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"cliente",
+								"64f0a1c2e4b0f1a2d3c4e5f9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar inscripciones por producto",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/producto/64f0a1c2e4b0f1a2d3c4e5f6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"producto",
+								"64f0a1c2e4b0f1a2d3c4e5f6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar inscripciones por rango de fechas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/fecha?fechaInicio=2025-01-01T00:00:00&fechaFin=2025-12-31T23:59:59",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"fecha"
+							],
+							"query": [
+								{
+									"key": "fechaInicio",
+									"value": "2025-01-01T00:00:00"
+								},
+								{
+									"key": "fechaFin",
+									"value": "2025-12-31T23:59:59"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar si existe inscripción",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/inscripciones/existe/64f0a1c2e4b0f1a2d3c4e5f8",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"inscripciones",
+								"existe",
+								"64f0a1c2e4b0f1a2d3c4e5f8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [
