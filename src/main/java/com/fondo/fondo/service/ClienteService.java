@@ -40,33 +40,35 @@ public class ClienteService {
             cliente.setNombre(clienteActualizado.getNombre());
             cliente.setApellidos(clienteActualizado.getApellidos());
             cliente.setCiudad(clienteActualizado.getCiudad());
+            cliente.setMonto(clienteActualizado.getMonto());
             return clienteRepository.save(cliente);
         } else {
-            throw new RuntimeException("Cliente no encontrado con ID: " + id);
+            return null;
         }
     }
     
     // Eliminar cliente
-    public void eliminarCliente(String id) {
+    public boolean eliminarCliente(String id) {
         if (clienteRepository.existsById(id)) {
             clienteRepository.deleteById(id);
+            return true;
         } else {
-            throw new RuntimeException("Cliente no encontrado con ID: " + id);
+            return false;
         }
     }
     
     // Buscar clientes por ciudad
-    public List<Cliente> buscarPorCiudad(String ciudad) {
+    public List<Cliente> buscarClientesPorCiudad(String ciudad) {
         return clienteRepository.findByCiudadIgnoreCase(ciudad);
     }
     
     // Buscar clientes por nombre
-    public List<Cliente> buscarPorNombre(String nombre) {
+    public List<Cliente> buscarClientesPorNombre(String nombre) {
         return clienteRepository.findByNombreContainingIgnoreCase(nombre);
     }
     
     // Buscar clientes por apellidos
-    public List<Cliente> buscarPorApellidos(String apellidos) {
+    public List<Cliente> buscarClientesPorApellidos(String apellidos) {
         return clienteRepository.findByApellidosContainingIgnoreCase(apellidos);
     }
     
