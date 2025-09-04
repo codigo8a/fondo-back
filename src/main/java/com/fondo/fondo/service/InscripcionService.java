@@ -1,19 +1,26 @@
 package com.fondo.fondo.service;
 
 import com.fondo.fondo.entity.Inscripcion;
+import com.fondo.fondo.entity.InscripcionConProducto;
+import com.fondo.fondo.entity.Producto;
 import com.fondo.fondo.repository.InscripcionRepository;
+import com.fondo.fondo.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class InscripcionService {
 
     @Autowired
     private InscripcionRepository inscripcionRepository;
+
+    @Autowired
+    private ProductoRepository productoRepository;
 
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         return inscripcionRepository.findAll();
@@ -57,6 +64,16 @@ public class InscripcionService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public List<InscripcionConProducto> buscarInscripcionesPorClienteConProducto(String idCliente) {
+        List<Inscripcion> inscripciones = inscripcionRepository.findByIdCliente(idCliente);
+        return inscripciones.stream()
+                .map(inscripcion -> {
+                    Optional<Producto> producto = productoRepository.findById(inscripcion.getIdProducto());
+                    return new InscripcionConProducto(inscripcion, producto.orElse(null));
+                })
+                .collect(Collectors.toList());
     }
 
     public List<Inscripcion> buscarInscripcionesPorCliente(String idCliente) {

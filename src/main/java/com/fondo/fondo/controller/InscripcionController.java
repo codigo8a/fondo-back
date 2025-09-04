@@ -1,6 +1,7 @@
 package com.fondo.fondo.controller;
 
 import com.fondo.fondo.entity.Inscripcion;
+import com.fondo.fondo.entity.InscripcionConProducto;
 import com.fondo.fondo.service.InscripcionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -115,13 +116,13 @@ public class InscripcionController {
     }
 
     @GetMapping("/cliente/{idCliente}")
-    @Operation(summary = "Buscar inscripciones por cliente", description = "Retorna todas las inscripciones de un cliente específico")
+    @Operation(summary = "Buscar inscripciones por cliente", description = "Retorna todas las inscripciones de un cliente específico con información del producto")
     @ApiResponse(responseCode = "200", description = "Lista de inscripciones del cliente obtenida exitosamente",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Inscripcion.class)))
-    public ResponseEntity<List<Inscripcion>> buscarInscripcionesPorCliente(
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = InscripcionConProducto.class)))
+    public ResponseEntity<List<InscripcionConProducto>> buscarInscripcionesPorCliente(
             @Parameter(description = "ID del cliente", required = true)
             @PathVariable String idCliente) {
-        List<Inscripcion> inscripciones = inscripcionService.buscarInscripcionesPorCliente(idCliente);
+        List<InscripcionConProducto> inscripciones = inscripcionService.buscarInscripcionesPorClienteConProducto(idCliente);
         return ResponseEntity.ok(inscripciones);
     }
 
