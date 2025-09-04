@@ -458,6 +458,222 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Sucursal CRUD",
+			"item": [
+				{
+					"name": "Obtener todas las sucursales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener sucursal por ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/64f0a1c2e4b0f1a2d3c4e5f7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"64f0a1c2e4b0f1a2d3c4e5f7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear nueva sucursal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Sucursal Centro\",\n    \"ciudad\": \"Bogotá\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sucursales",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Actualizar sucursal",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Sucursal Centro Actualizada\",\n    \"ciudad\": \"Medellín\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/64f0a1c2e4b0f1a2d3c4e5f7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"64f0a1c2e4b0f1a2d3c4e5f7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar sucursal",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/64f0a1c2e4b0f1a2d3c4e5f7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"64f0a1c2e4b0f1a2d3c4e5f7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar sucursales por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/nombre/Centro",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"nombre",
+								"Centro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar sucursales por ciudad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/ciudad/Bogotá",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"ciudad",
+								"Bogotá"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar si existe sucursal",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/existe/64f0a1c2e4b0f1a2d3c4e5f7",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"existe",
+								"64f0a1c2e4b0f1a2d3c4e5f7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar si existe sucursal por nombre",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/existe-nombre/Centro",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"existe-nombre",
+								"Centro"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verificar si existe sucursal en ciudad",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sucursales/existe-ciudad/Bogotá",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sucursales",
+								"existe-ciudad",
+								"Bogotá"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"variable": [
