@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
-@Document(collection = "sucursales")
+@Document(collection = "sucursal")
 @Schema(description = "Entidad que representa una sucursal")
 public class Sucursal {
     

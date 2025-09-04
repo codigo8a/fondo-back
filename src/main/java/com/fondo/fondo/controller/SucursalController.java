@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/sucursales")
+@RequestMapping("/api/sucursal")
 @Tag(name = "Sucursal", description = "API para gestión de sucursales")
 public class SucursalController {
     
