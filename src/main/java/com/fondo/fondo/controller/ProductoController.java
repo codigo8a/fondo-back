@@ -1,6 +1,7 @@
 package com.fondo.fondo.controller;
 
 import com.fondo.fondo.entity.Producto;
+import com.fondo.fondo.dto.ProductoCreateDto;
 import com.fondo.fondo.service.ProductoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,8 +56,15 @@ public class ProductoController {
     })
     public ResponseEntity<Producto> crearProducto(
             @Parameter(description = "Datos del producto a crear", required = true)
-            @Valid @RequestBody Producto producto) {
+            @Valid @RequestBody ProductoCreateDto productoDto) {
         try {
+            // Convertir DTO a entidad
+            Producto producto = new Producto();
+            producto.setNombre(productoDto.getNombre());
+            producto.setTipoProducto(productoDto.getTipoProducto());
+            producto.setMontoMinimo(productoDto.getMontoMinimo());
+            producto.setDisponibleEn(productoDto.getDisponibleEn());
+            
             Producto nuevoProducto = productoService.crearProducto(producto);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
         } catch (Exception e) {

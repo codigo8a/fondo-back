@@ -1,8 +1,7 @@
 package com.fondo.fondo.controller;
 
 import com.fondo.fondo.entity.Inscripcion;
-import com.fondo.fondo.entity.InscripcionConProducto;
-import com.fondo.fondo.entity.InscripcionConProductoCompleto;
+import com.fondo.fondo.dto.InscripcionCreateDto;
 import com.fondo.fondo.service.InscripcionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,11 +48,8 @@ public class InscripcionController {
             @Parameter(description = "ID de la inscripción", required = true)
             @PathVariable String id) {
         Optional<Inscripcion> inscripcion = inscripcionService.obtenerInscripcionPorId(id);
-        if (inscripcion.isPresent()) {
-            return ResponseEntity.ok(inscripcion.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return inscripcion.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
@@ -65,8 +61,15 @@ public class InscripcionController {
     })
     public ResponseEntity<Inscripcion> crearInscripcion(
             @Parameter(description = "Datos de la inscripción a crear", required = true)
-            @Valid @RequestBody Inscripcion inscripcion) {
+            @Valid @RequestBody InscripcionCreateDto inscripcionDto) {
         try {
+            // Convertir DTO a entidad
+            Inscripcion inscripcion = new Inscripcion();
+            inscripcion.setIdCliente(inscripcionDto.getIdCliente());
+            inscripcion.setIdProducto(inscripcionDto.getIdProducto());
+            inscripcion.setMontoInvertido(inscripcionDto.getMontoInvertido());
+            inscripcion.setFechaTransaccion(inscripcionDto.getFechaTransaccion());
+            
             Inscripcion nuevaInscripcion = inscripcionService.crearInscripcion(inscripcion);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevaInscripcion);
         } catch (Exception e) {
@@ -87,20 +90,14 @@ public class InscripcionController {
             @PathVariable String id,
             @Parameter(description = "Datos actualizados de la inscripción", required = true)
             @Valid @RequestBody Inscripcion inscripcion) {
-        try {
-            Inscripcion inscripcionActualizada = inscripcionService.actualizarInscripcion(id, inscripcion);
-            if (inscripcionActualizada != null) {
-                return ResponseEntity.ok(inscripcionActualizada);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Inscripcion inscripcionActualizada = inscripcionService.actualizarInscripcion(id, inscripcion);
+        return inscripcionActualizada != null ? 
+                ResponseEntity.ok(inscripcionActualizada) : 
+                ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Eliminar inscripción", description = "Elimina una inscripción por su ID")
+    @Operation(summary = "Eliminar inscripción", description = "Elimina una inscripción del sistema")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Inscripción eliminada exitosamente"),
             @ApiResponse(responseCode = "404", description = "Inscripción no encontrada")
@@ -109,23 +106,19 @@ public class InscripcionController {
             @Parameter(description = "ID de la inscripción", required = true)
             @PathVariable String id) {
         boolean eliminado = inscripcionService.eliminarInscripcion(id);
-        if (eliminado) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return eliminado ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/cliente/{idCliente}")
     @Operation(summary = "Buscar inscripciones por cliente", 
-               description = "Obtiene todas las inscripciones de un cliente específico con información completa del producto y sucursales")
+               description = "Obtiene todas las inscripciones de un cliente específico")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Inscripciones encontradas exitosamente o lista vacía si no hay inscripciones")
     })
-    public ResponseEntity<List<InscripcionConProductoCompleto>> buscarInscripcionesPorCliente(
+    public ResponseEntity<List<Inscripcion>> buscarInscripcionesPorCliente(
             @Parameter(description = "ID del cliente", example = "64f0a1c2e4b0f1a2d3c4e5f9")
             @PathVariable String idCliente) {
-        List<InscripcionConProductoCompleto> inscripciones = inscripcionService.buscarInscripcionesPorClienteCompleto(idCliente);
+        List<Inscripcion> inscripciones = inscripcionService.buscarInscripcionesPorProducto(idCliente);
         return ResponseEntity.ok(inscripciones);
     }
 

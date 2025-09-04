@@ -27,6 +27,8 @@ public class ProductoService {
     
     // Crear nuevo producto
     public Producto crearProducto(Producto producto) {
+        // Asegurar que el ID sea null para forzar la creación de un nuevo producto
+        producto.setId(null);
         return productoRepository.save(producto);
     }
     

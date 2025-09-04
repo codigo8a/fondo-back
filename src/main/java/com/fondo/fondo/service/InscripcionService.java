@@ -1,32 +1,19 @@
 package com.fondo.fondo.service;
 
 import com.fondo.fondo.entity.Inscripcion;
-import com.fondo.fondo.entity.InscripcionConProductoCompleto;
-import com.fondo.fondo.entity.Producto;
-import com.fondo.fondo.entity.ProductoConSucursales;
-import com.fondo.fondo.entity.Sucursal;
 import com.fondo.fondo.repository.InscripcionRepository;
-import com.fondo.fondo.repository.ProductoRepository;
-import com.fondo.fondo.repository.SucursalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class InscripcionService {
     
     @Autowired
     private InscripcionRepository inscripcionRepository;
-    
-    @Autowired
-    private ProductoRepository productoRepository;
-    
-    @Autowired
-    private SucursalRepository sucursalRepository;
 
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         return inscripcionRepository.findAll();
@@ -37,6 +24,8 @@ public class InscripcionService {
     }
 
     public Inscripcion crearInscripcion(Inscripcion inscripcion) {
+        // Asegurar que el ID sea null para forzar la creación de una nueva inscripción
+        inscripcion.setId(null);
         if (inscripcion.getFechaTransaccion() == null) {
             inscripcion.setFechaTransaccion(LocalDateTime.now());
         }
@@ -72,29 +61,8 @@ public class InscripcionService {
         }
     }
 
-    public List<InscripcionConProductoCompleto> buscarInscripcionesPorClienteCompleto(String idCliente) {
-        List<Inscripcion> inscripciones = inscripcionRepository.findByIdCliente(idCliente);
-        return inscripciones.stream()
-                .map(this::convertirAInscripcionConProductoCompleto)
-                .collect(Collectors.toList());
-    }
-
-    private InscripcionConProductoCompleto convertirAInscripcionConProductoCompleto(Inscripcion inscripcion) {
-        Optional<Producto> productoOpt = productoRepository.findById(inscripcion.getIdProducto());
-        if (productoOpt.isPresent()) {
-            Producto producto = productoOpt.get();
-            
-            // Obtener información completa de las sucursales
-            List<Sucursal> sucursales = producto.getDisponibleEn().stream()
-                    .map(sucursalRepository::findById)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .collect(Collectors.toList());
-            
-            ProductoConSucursales productoConSucursales = new ProductoConSucursales(producto, sucursales);
-            return new InscripcionConProductoCompleto(inscripcion, productoConSucursales);
-        }
-        return null;
+    public List<Inscripcion> buscarInscripcionesPorCliente(String idCliente) {
+        return inscripcionRepository.findByIdCliente(idCliente);
     }
 
     public List<Inscripcion> buscarInscripcionesPorProducto(String idProducto) {

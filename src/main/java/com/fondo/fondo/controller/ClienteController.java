@@ -1,6 +1,7 @@
 package com.fondo.fondo.controller;
 
 import com.fondo.fondo.entity.Cliente;
+import com.fondo.fondo.dto.ClienteCreateDto;
 import com.fondo.fondo.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -63,7 +64,14 @@ public class ClienteController {
     })
     public ResponseEntity<Cliente> crearCliente(
             @Parameter(description = "Datos del cliente a crear", required = true)
-            @Valid @RequestBody Cliente cliente) {
+            @Valid @RequestBody ClienteCreateDto clienteDto) {
+        // Convertir DTO a entidad
+        Cliente cliente = new Cliente();
+        cliente.setNombre(clienteDto.getNombre());
+        cliente.setApellidos(clienteDto.getApellidos());
+        cliente.setCiudad(clienteDto.getCiudad());
+        cliente.setMonto(clienteDto.getMonto());
+        
         Cliente nuevoCliente = clienteService.crearCliente(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoCliente);
     }

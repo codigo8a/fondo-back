@@ -1,6 +1,7 @@
 package com.fondo.fondo.controller;
 
 import com.fondo.fondo.entity.Sucursal;
+import com.fondo.fondo.dto.SucursalCreateDto;
 import com.fondo.fondo.service.SucursalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -55,8 +56,13 @@ public class SucursalController {
     })
     public ResponseEntity<Sucursal> crearSucursal(
             @Parameter(description = "Datos de la sucursal a crear", required = true)
-            @Valid @RequestBody Sucursal sucursal) {
+            @Valid @RequestBody SucursalCreateDto sucursalDto) {
         try {
+            // Convertir DTO a entidad
+            Sucursal sucursal = new Sucursal();
+            sucursal.setNombre(sucursalDto.getNombre());
+            sucursal.setCiudad(sucursalDto.getCiudad());
+            
             Sucursal nuevaSucursal = sucursalService.crearSucursal(sucursal);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevaSucursal);
         } catch (Exception e) {

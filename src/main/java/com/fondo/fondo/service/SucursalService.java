@@ -26,6 +26,8 @@ public class SucursalService {
     
     // Crear nueva sucursal
     public Sucursal crearSucursal(Sucursal sucursal) {
+        // Asegurar que el ID sea null para forzar la creación de una nueva sucursal
+        sucursal.setId(null);
         return sucursalRepository.save(sucursal);
     }
     
