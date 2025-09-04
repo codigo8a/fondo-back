@@ -19,6 +19,10 @@ public class InscripcionCreateDto {
     @Schema(description = "ID del producto", example = "507f1f77bcf86cd799439012")
     private String idProducto;
     
+    @NotBlank(message = "El ID de la sucursal es obligatorio")
+    @Schema(description = "ID de la sucursal", example = "507f1f77bcf86cd799439013")
+    private String idSucursal;
+    
     @NotNull(message = "El monto invertido es obligatorio")
     @Positive(message = "El monto invertido debe ser mayor a cero")
     @Schema(description = "Monto invertido", example = "1000000.00")
@@ -31,9 +35,10 @@ public class InscripcionCreateDto {
     public InscripcionCreateDto() {}
     
     // Constructor con parámetros
-    public InscripcionCreateDto(String idCliente, String idProducto, BigDecimal montoInvertido, LocalDateTime fechaTransaccion) {
+    public InscripcionCreateDto(String idCliente, String idProducto, String idSucursal, BigDecimal montoInvertido, LocalDateTime fechaTransaccion) {
         this.idCliente = idCliente;
         this.idProducto = idProducto;
+        this.idSucursal = idSucursal;
         this.montoInvertido = montoInvertido;
         this.fechaTransaccion = fechaTransaccion;
     }
@@ -53,6 +58,14 @@ public class InscripcionCreateDto {
     
     public void setIdProducto(String idProducto) {
         this.idProducto = idProducto;
+    }
+    
+    public String getIdSucursal() {
+        return idSucursal;
+    }
+    
+    public void setIdSucursal(String idSucursal) {
+        this.idSucursal = idSucursal;
     }
     
     public BigDecimal getMontoInvertido() {

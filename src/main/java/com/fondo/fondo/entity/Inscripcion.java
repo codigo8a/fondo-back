@@ -25,6 +25,10 @@ public class Inscripcion {
     @Schema(description = "Identificador del producto", example = "64f0a1c2e4b0f1a2d3c4e5f6", required = true)
     private String idProducto;
 
+    @NotNull(message = "El ID de la sucursal es obligatorio")
+    @Schema(description = "Identificador de la sucursal", example = "64f0a1c2e4b0f1a2d3c4e5f7", required = true)
+    private String idSucursal;
+
     @NotNull(message = "El monto invertido es obligatorio")
     @DecimalMin(value = "0.0", inclusive = false, message = "El monto invertido debe ser mayor que 0")
     @Schema(description = "Monto invertido en el producto", example = "100000", required = true)
@@ -37,9 +41,10 @@ public class Inscripcion {
     // Constructores
     public Inscripcion() {}
 
-    public Inscripcion(String idCliente, String idProducto, BigDecimal montoInvertido, LocalDateTime fechaTransaccion) {
+    public Inscripcion(String idCliente, String idProducto, String idSucursal, BigDecimal montoInvertido, LocalDateTime fechaTransaccion) {
         this.idCliente = idCliente;
         this.idProducto = idProducto;
+        this.idSucursal = idSucursal;
         this.montoInvertido = montoInvertido;
         this.fechaTransaccion = fechaTransaccion;
     }
@@ -69,6 +74,14 @@ public class Inscripcion {
         this.idProducto = idProducto;
     }
 
+    public String getIdSucursal() {
+        return idSucursal;
+    }
+
+    public void setIdSucursal(String idSucursal) {
+        this.idSucursal = idSucursal;
+    }
+
     public BigDecimal getMontoInvertido() {
         return montoInvertido;
     }
@@ -91,6 +104,7 @@ public class Inscripcion {
                 "id='" + id + '\'' +
                 ", idCliente='" + idCliente + '\'' +
                 ", idProducto='" + idProducto + '\'' +
+                ", idSucursal='" + idSucursal + '\'' +
                 ", montoInvertido=" + montoInvertido +
                 ", fechaTransaccion=" + fechaTransaccion +
                 '}';

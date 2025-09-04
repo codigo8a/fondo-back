@@ -57,7 +57,7 @@ public class InscripcionController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Inscripción creada exitosamente",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Inscripcion.class))),
-            @ApiResponse(responseCode = "400", description = "Datos de inscripción inválidos")
+            @ApiResponse(responseCode = "400", description = "Datos de inscripción inválidos o producto no disponible en la sucursal")
     })
     public ResponseEntity<Inscripcion> crearInscripcion(
             @Parameter(description = "Datos de la inscripción a crear", required = true)
@@ -67,12 +67,13 @@ public class InscripcionController {
             Inscripcion inscripcion = new Inscripcion();
             inscripcion.setIdCliente(inscripcionDto.getIdCliente());
             inscripcion.setIdProducto(inscripcionDto.getIdProducto());
+            inscripcion.setIdSucursal(inscripcionDto.getIdSucursal());
             inscripcion.setMontoInvertido(inscripcionDto.getMontoInvertido());
             inscripcion.setFechaTransaccion(inscripcionDto.getFechaTransaccion());
             
             Inscripcion nuevaInscripcion = inscripcionService.crearInscripcion(inscripcion);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevaInscripcion);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -118,7 +119,7 @@ public class InscripcionController {
     public ResponseEntity<List<Inscripcion>> buscarInscripcionesPorCliente(
             @Parameter(description = "ID del cliente", example = "64f0a1c2e4b0f1a2d3c4e5f9")
             @PathVariable String idCliente) {
-        List<Inscripcion> inscripciones = inscripcionService.buscarInscripcionesPorProducto(idCliente);
+        List<Inscripcion> inscripciones = inscripcionService.buscarInscripcionesPorCliente(idCliente);
         return ResponseEntity.ok(inscripciones);
     }
 

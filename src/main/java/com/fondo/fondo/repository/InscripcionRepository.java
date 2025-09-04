@@ -13,7 +13,6 @@ public interface InscripcionRepository extends MongoRepository<Inscripcion, Stri
     List<Inscripcion> findByIdCliente(String idCliente);
     
     List<Inscripcion> findByIdProducto(String idProducto);
-    
     List<Inscripcion> findByFechaTransaccionBetween(LocalDateTime fechaInicio, LocalDateTime fechaFin);
     
     List<Inscripcion> findByIdClienteAndIdProducto(String idCliente, String idProducto);

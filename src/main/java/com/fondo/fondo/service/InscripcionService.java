@@ -1,19 +1,24 @@
 package com.fondo.fondo.service;
 
 import com.fondo.fondo.entity.Inscripcion;
+import com.fondo.fondo.entity.Producto;
 import com.fondo.fondo.repository.InscripcionRepository;
+import com.fondo.fondo.repository.ProductoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 public class InscripcionService {
-    
+
     @Autowired
     private InscripcionRepository inscripcionRepository;
+    
+    @Autowired
+    private ProductoRepository productoRepository;
 
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         return inscripcionRepository.findAll();
@@ -24,41 +29,39 @@ public class InscripcionService {
     }
 
     public Inscripcion crearInscripcion(Inscripcion inscripcion) {
-        // Asegurar que el ID sea null para forzar la creación de una nueva inscripción
-        inscripcion.setId(null);
-        if (inscripcion.getFechaTransaccion() == null) {
-            inscripcion.setFechaTransaccion(LocalDateTime.now());
+        // Validar que el producto existe
+        Optional<Producto> productoOpt = productoRepository.findById(inscripcion.getIdProducto());
+        if (productoOpt.isEmpty()) {
+            throw new RuntimeException("El producto no existe");
         }
+        
+        Producto producto = productoOpt.get();
+        
+        // Validar que el producto está disponible en la sucursal especificada
+        if (producto.getDisponibleEn() == null || !producto.getDisponibleEn().contains(inscripcion.getIdSucursal())) {
+            throw new RuntimeException("Este producto no está disponible en la sucursal");
+        }
+        
+        // Establecer ID como null para asegurar que se genere uno nuevo
+        inscripcion.setId(null);
         return inscripcionRepository.save(inscripcion);
     }
 
-    public Inscripcion actualizarInscripcion(String id, Inscripcion inscripcionActualizada) {
-        try {
-            Optional<Inscripcion> inscripcionExistente = inscripcionRepository.findById(id);
-            if (inscripcionExistente.isPresent()) {
-                Inscripcion inscripcion = inscripcionExistente.get();
-                inscripcion.setIdCliente(inscripcionActualizada.getIdCliente());
-                inscripcion.setIdProducto(inscripcionActualizada.getIdProducto());
-                inscripcion.setMontoInvertido(inscripcionActualizada.getMontoInvertido());
-                inscripcion.setFechaTransaccion(inscripcionActualizada.getFechaTransaccion());
-                return inscripcionRepository.save(inscripcion);
-            }
-            return null;
-        } catch (Exception e) {
-            return null;
+    public Inscripcion actualizarInscripcion(String id, Inscripcion inscripcion) {
+        if (inscripcionRepository.existsById(id)) {
+            inscripcion.setId(id);
+            return inscripcionRepository.save(inscripcion);
+        } else {
+            throw new RuntimeException("Inscripción no encontrada con ID: " + id);
         }
     }
 
     public boolean eliminarInscripcion(String id) {
-        try {
-            if (inscripcionRepository.existsById(id)) {
-                inscripcionRepository.deleteById(id);
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            return false;
+        if (inscripcionRepository.existsById(id)) {
+            inscripcionRepository.deleteById(id);
+            return true;
         }
+        return false;
     }
 
     public List<Inscripcion> buscarInscripcionesPorCliente(String idCliente) {
@@ -71,10 +74,6 @@ public class InscripcionService {
 
     public List<Inscripcion> buscarInscripcionesPorFecha(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
         return inscripcionRepository.findByFechaTransaccionBetween(fechaInicio, fechaFin);
-    }
-
-    public List<Inscripcion> buscarInscripcionesPorClienteYProducto(String idCliente, String idProducto) {
-        return inscripcionRepository.findByIdClienteAndIdProducto(idCliente, idProducto);
     }
 
     public boolean existeInscripcion(String id) {
