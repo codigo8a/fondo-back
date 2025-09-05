@@ -163,6 +163,22 @@ class InscripcionServiceTest {
     }
 
     @Test
+    void testCrearInscripcionProductoDisponibleEnVacio() {
+        // Arrange
+        producto.setDisponibleEn(Collections.emptyList()); // Lista vacía
+        when(productoRepository.findById("producto1")).thenReturn(Optional.of(producto));
+
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            inscripcionService.crearInscripcion(inscripcion);
+        });
+        assertEquals("Este producto no está disponible en la sucursal", exception.getMessage());
+        verify(productoRepository).findById("producto1");
+        verify(inscripcionRepository, never()).save(any());
+        verify(logService, never()).registrarMovimiento(any(), any(), any(), any(), any());
+    }
+
+    @Test
     void testCrearInscripcionDuplicada() {
         // Arrange
         when(productoRepository.findById("producto1")).thenReturn(Optional.of(producto));
@@ -277,5 +293,35 @@ class InscripcionServiceTest {
         // Assert
         assertFalse(resultado);
         verify(inscripcionRepository).existsById("999");
+    }
+
+    @Test
+    void testCrearInscripcionEstableceIdNull() {
+        // Arrange
+        Inscripcion inscripcionConId = new Inscripcion();
+        inscripcionConId.setId("id-existente"); // Inscripción con ID previo
+        inscripcionConId.setIdCliente("cliente1");
+        inscripcionConId.setIdProducto("producto1");
+        inscripcionConId.setIdSucursal("sucursal1");
+        inscripcionConId.setMontoInvertido(new BigDecimal("100000"));
+        inscripcionConId.setFechaTransaccion(LocalDateTime.now());
+
+        when(productoRepository.findById("producto1")).thenReturn(Optional.of(producto));
+        when(inscripcionRepository.findByIdClienteAndIdProducto("cliente1", "producto1"))
+                .thenReturn(Collections.emptyList());
+        when(inscripcionRepository.save(any(Inscripcion.class))).thenAnswer(invocation -> {
+            Inscripcion saved = invocation.getArgument(0);
+            assertNull(saved.getId(), "El ID debe ser null antes de guardar");
+            saved.setId("nuevo-id-generado");
+            return saved;
+        });
+
+        // Act
+        Inscripcion resultado = inscripcionService.crearInscripcion(inscripcionConId);
+
+        // Assert
+        assertNotNull(resultado);
+        assertEquals("nuevo-id-generado", resultado.getId());
+        verify(logService).registrarMovimiento(eq("CREAR_INSCRIPCION"), eq("nuevo-id-generado"), eq("INSCRIPCION"), eq("cliente1"), any());
     }
 }
