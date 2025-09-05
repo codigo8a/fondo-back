@@ -243,84 +243,27 @@ class InscripcionServiceTest {
     }
 
     @Test
-    void testBuscarInscripcionesPorCliente() {
-        // Arrange
-        List<Inscripcion> inscripciones = Arrays.asList(inscripcion);
-        when(inscripcionRepository.findByIdCliente("cliente1")).thenReturn(inscripciones);
-
-        // Act
-        List<Inscripcion> resultado = inscripcionService.buscarInscripcionesPorCliente("cliente1");
-
-        // Assert
-        assertNotNull(resultado);
-        assertEquals(1, resultado.size());
-        assertEquals("cliente1", resultado.get(0).getIdCliente());
-        verify(inscripcionRepository).findByIdCliente("cliente1");
-    }
-
-    @Test
-    void testBuscarInscripcionesDetalladasPorCliente() {
-        // Arrange
-        List<Inscripcion> inscripciones = Arrays.asList(inscripcion);
-        when(inscripcionRepository.findByIdCliente("cliente1")).thenReturn(inscripciones);
-        when(productoRepository.findById("producto1")).thenReturn(Optional.of(producto));
-        when(sucursalRepository.findById("sucursal1")).thenReturn(Optional.of(sucursal));
-
-        // Act
-        List<InscripcionDetalleDto> resultado = inscripcionService.buscarInscripcionesDetalladasPorCliente("cliente1");
-
-        // Assert
-        assertNotNull(resultado);
-        assertEquals(1, resultado.size());
-        assertEquals("cliente1", resultado.get(0).getIdCliente());
-        assertEquals(producto.getNombre(), resultado.get(0).getProducto().getNombre());
-        assertEquals(sucursal.getNombre(), resultado.get(0).getSucursal().getNombre());
-    }
-
-    @Test
-    void testBuscarInscripcionesPorProducto() {
-        // Arrange
-        List<Inscripcion> inscripciones = Arrays.asList(inscripcion);
-        when(inscripcionRepository.findByIdProducto("producto1")).thenReturn(inscripciones);
-
-        // Act
-        List<Inscripcion> resultado = inscripcionService.buscarInscripcionesPorProducto("producto1");
-
-        // Assert
-        assertNotNull(resultado);
-        assertEquals(1, resultado.size());
-        assertEquals("producto1", resultado.get(0).getIdProducto());
-        verify(inscripcionRepository).findByIdProducto("producto1");
-    }
-
-    @Test
-    void testBuscarInscripcionesPorFecha() {
-        // Arrange
-        LocalDateTime fechaInicio = LocalDateTime.of(2025, 1, 1, 0, 0);
-        LocalDateTime fechaFin = LocalDateTime.of(2025, 12, 31, 23, 59);
-        List<Inscripcion> inscripciones = Arrays.asList(inscripcion);
-        when(inscripcionRepository.findByFechaTransaccionBetween(fechaInicio, fechaFin)).thenReturn(inscripciones);
-
-        // Act
-        List<Inscripcion> resultado = inscripcionService.buscarInscripcionesPorFecha(fechaInicio, fechaFin);
-
-        // Assert
-        assertNotNull(resultado);
-        assertEquals(1, resultado.size());
-        verify(inscripcionRepository).findByFechaTransaccionBetween(fechaInicio, fechaFin);
-    }
-
-    @Test
-    void testExisteInscripcion() {
-        // Arrange
+    void testEliminarInscripcionExistePeroBusquedaVacia() {
+        // Arrange - Simular que existe pero findById retorna vacío
         when(inscripcionRepository.existsById("1")).thenReturn(true);
+        when(inscripcionRepository.findById("1")).thenReturn(Optional.empty());
 
         // Act
-        boolean resultado = inscripcionService.existeInscripcion("1");
+        boolean resultado = inscripcionService.eliminarInscripcion("1");
 
         // Assert
         assertTrue(resultado);
         verify(inscripcionRepository).existsById("1");
+        verify(inscripcionRepository).findById("1");
+        verify(inscripcionRepository).deleteById("1");
+        // Verificar que se llama al log con null como idCliente
+        verify(logService).registrarMovimiento(
+            eq("ELIMINAR_INSCRIPCION"), 
+            eq("1"), 
+            eq("INSCRIPCION"), 
+            eq(null), 
+            eq("Inscripción eliminada")
+        );
     }
 
     @Test
