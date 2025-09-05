@@ -26,6 +26,9 @@ public class InscripcionService {
     
     @Autowired
     private SucursalRepository sucursalRepository;
+    
+    @Autowired
+    private LogService logService;
 
     public List<Inscripcion> obtenerTodasLasInscripciones() {
         return inscripcionRepository.findAll();
@@ -61,7 +64,18 @@ public class InscripcionService {
         
         // Establecer ID como null para asegurar que se genere uno nuevo
         inscripcion.setId(null);
-        return inscripcionRepository.save(inscripcion);
+        Inscripcion nuevaInscripcion = inscripcionRepository.save(inscripcion);
+        
+        // Registrar el movimiento en el log incluyendo idCliente
+        String detalles = String.format("Producto: %s, Sucursal: %s, Monto: %s", 
+            nuevaInscripcion.getIdProducto(), 
+            nuevaInscripcion.getIdSucursal(), 
+            nuevaInscripcion.getMontoInvertido());
+        
+        logService.registrarMovimiento("CREAR_INSCRIPCION", nuevaInscripcion.getId(), "INSCRIPCION", 
+            nuevaInscripcion.getIdCliente(), detalles);
+        
+        return nuevaInscripcion;
     }
 
     public Inscripcion actualizarInscripcion(String id, Inscripcion inscripcion) {
@@ -75,7 +89,26 @@ public class InscripcionService {
 
     public boolean eliminarInscripcion(String id) {
         if (inscripcionRepository.existsById(id)) {
+            // Obtener la inscripción antes de eliminarla para el log
+            Optional<Inscripcion> inscripcionOpt = inscripcionRepository.findById(id);
+            
             inscripcionRepository.deleteById(id);
+            
+            // Registrar el movimiento en el log incluyendo idCliente
+            if (inscripcionOpt.isPresent()) {
+                Inscripcion inscripcion = inscripcionOpt.get();
+                String detalles = String.format("Producto: %s, Sucursal: %s, Monto: %s", 
+                    inscripcion.getIdProducto(), 
+                    inscripcion.getIdSucursal(), 
+                    inscripcion.getMontoInvertido());
+                
+                logService.registrarMovimiento("ELIMINAR_INSCRIPCION", id, "INSCRIPCION", 
+                    inscripcion.getIdCliente(), detalles);
+            } else {
+                logService.registrarMovimiento("ELIMINAR_INSCRIPCION", id, "INSCRIPCION", 
+                    null, "Inscripción eliminada");
+            }
+            
             return true;
         }
         return false;

@@ -2,6 +2,7 @@ package com.fondo.fondo.controller;
 
 import com.fondo.fondo.entity.Cliente;
 import com.fondo.fondo.dto.ClienteCreateDto;
+import com.fondo.fondo.dto.ClienteUpdateMontoDto;
 import com.fondo.fondo.service.ClienteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,8 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/clientes")
@@ -160,5 +164,35 @@ public class ClienteController {
             @PathVariable String id) {
         boolean existe = clienteService.existeCliente(id);
         return ResponseEntity.ok(existe);
+    }
+    
+    @PatchMapping("/{id}/monto")
+    @Operation(summary = "Actualizar monto del cliente", description = "Actualiza únicamente el monto de un cliente específico. Permite establecer el monto en cero.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Monto del cliente actualizado exitosamente",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Cliente.class))),
+            @ApiResponse(responseCode = "404", description = "Cliente no encontrado"),
+            @ApiResponse(responseCode = "400", description = "Datos de entrada inválidos")
+    })
+    public ResponseEntity<?> actualizarMontoCliente(
+            @Parameter(description = "ID del cliente a actualizar", required = true)
+            @PathVariable String id,
+            @Parameter(description = "Nuevo monto del cliente (puede ser cero)", required = true)
+            @Valid @RequestBody ClienteUpdateMontoDto montoDto) {
+        try {
+            // Validación adicional para asegurar que el monto no sea negativo
+            if (montoDto.getMonto().compareTo(BigDecimal.ZERO) < 0) {
+                Map<String, String> error = new HashMap<>();
+                error.put("error", "El monto no puede ser negativo");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+            }
+            
+            Cliente clienteActualizado = clienteService.actualizarMontoCliente(id, montoDto.getMonto());
+            return ResponseEntity.ok(clienteActualizado);
+        } catch (RuntimeException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
     }
 }

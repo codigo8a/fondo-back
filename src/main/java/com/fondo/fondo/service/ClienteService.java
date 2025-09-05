@@ -5,6 +5,7 @@ import com.fondo.fondo.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,5 +76,22 @@ public class ClienteService {
     // Verificar si existe un cliente
     public boolean existeCliente(String id) {
         return clienteRepository.existsById(id);
+    }
+    
+    // Actualizar solo el monto de un cliente
+    public Cliente actualizarMontoCliente(String id, BigDecimal nuevoMonto) {
+        Optional<Cliente> clienteOpt = clienteRepository.findById(id);
+        if (clienteOpt.isEmpty()) {
+            throw new RuntimeException("Cliente no encontrado con ID: " + id);
+        }
+        
+        Cliente cliente = clienteOpt.get();
+        // Permitir explícitamente cero
+        if (nuevoMonto.compareTo(BigDecimal.ZERO) >= 0) {
+            cliente.setMonto(nuevoMonto);
+            return clienteRepository.save(cliente);
+        } else {
+            throw new IllegalArgumentException("El monto no puede ser negativo");
+        }
     }
 }
