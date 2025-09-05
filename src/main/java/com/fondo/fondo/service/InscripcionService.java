@@ -49,6 +49,16 @@ public class InscripcionService {
             throw new RuntimeException("Este producto no está disponible en la sucursal");
         }
         
+        // Validar que no existe una inscripción duplicada para el mismo cliente y producto
+        List<Inscripcion> inscripcionesExistentes = inscripcionRepository.findByIdClienteAndIdProducto(
+            inscripcion.getIdCliente(), 
+            inscripcion.getIdProducto()
+        );
+        
+        if (!inscripcionesExistentes.isEmpty()) {
+            throw new RuntimeException("ya tiene una incripción con este producto");
+        }
+        
         // Establecer ID como null para asegurar que se genere uno nuevo
         inscripcion.setId(null);
         return inscripcionRepository.save(inscripcion);

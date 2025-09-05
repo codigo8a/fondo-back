@@ -145,7 +145,6 @@ public class ProductoController {
     @Operation(summary = "Buscar productos disponibles en sucursal", description = "Retorna productos disponibles en la sucursal especificada")
     @ApiResponse(responseCode = "200", description = "Búsqueda completada exitosamente")
     public ResponseEntity<List<Producto>> buscarProductosEnSucursal(
-            @Parameter(description = "ID de la sucursal", required = true)
             @PathVariable String idSucursal) {
         List<Producto> productos = productoService.buscarProductosEnSucursal(idSucursal);
         return ResponseEntity.ok(productos);

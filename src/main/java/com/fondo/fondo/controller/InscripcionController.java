@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Optional;
 
 @RestController
@@ -60,7 +62,7 @@ public class InscripcionController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Inscripcion.class))),
             @ApiResponse(responseCode = "400", description = "Datos de inscripción inválidos o producto no disponible en la sucursal")
     })
-    public ResponseEntity<Inscripcion> crearInscripcion(
+    public ResponseEntity<?> crearInscripcion(
             @Parameter(description = "Datos de la inscripción a crear", required = true)
             @Valid @RequestBody InscripcionCreateDto inscripcionDto) {
         try {
@@ -75,7 +77,9 @@ public class InscripcionController {
             Inscripcion nuevaInscripcion = inscripcionService.crearInscripcion(inscripcion);
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevaInscripcion);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
         }
     }
 
